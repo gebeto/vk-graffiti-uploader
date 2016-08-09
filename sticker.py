@@ -46,5 +46,3 @@ try:
 	graffitiSend(raw_input("User ID: "), "doc") #graffitiSend("122248315", "doc")
 except:
 	print "sticker.exe <LOGIN> <PASSWORD> <FILE> <USER_ID>"
-
-# vk.login("slavik1314@gmail.com", "emetup69")
