@@ -1,6 +1,6 @@
 ﻿# -*- coding: utf-8 -*-
 
-import requests, sys, webbrowser, vk, json
+import requests, sys, webbrowser, vk, json, downloader
 
 def getUploadServer():
 	url = "https://api.vk.com/method/docs.getUploadServer"
@@ -41,22 +41,28 @@ def graffitiSend(userId, doc):
 	print response
 
 try:
-	print "VK Graffiti uploader by Slavik Nychkalo v1.01\n"
+	print "\nVK Graffiti uploader by Slavik Nychkalo v1.02\n"
 	LOGIN = ""
 	PASSWORD = ""
+	ACCESS_TOKEN = ""
 	try:
 		data = json.load(open("VKdata.json","r"))
-		LOGIN = data["login"]
-		PASSWORD = data["password"]
+		ACCESS_TOKEN = data["access_token"]
+		# LOGIN = data["login"]
+		# PASSWORD = data["password"]
 	except:
 		print "VK.COM Authorization"
 		LOGIN = raw_input("Login: ")
 		PASSWORD = raw_input("Password: ")
-	ACCESS_TOKEN = vk.login(LOGIN, PASSWORD)
+		ACCESS_TOKEN = vk.login(LOGIN, PASSWORD)
 	json.dump({
-			"login": LOGIN,
-			"password": PASSWORD
+			"access_token": ACCESS_TOKEN,
 		}, open("VKdata.json","w"))
+
+	if str(raw_input("Run sticker downloader? y/n: ")) == "y":
+		downloader.main(ACCESS_TOKEN)
+		sys.exit(1)
+		
 	USER = requests.get("https://api.vk.com/method/users.get?name_case=nom&access_token=%s&v=5.53&lang=en"%ACCESS_TOKEN).json()["response"][0]
 	USER_ID = USER["id"]
 	print "%s %s, ID: %s\n"%(USER["first_name"], USER["last_name"], USER_ID)
