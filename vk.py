@@ -24,7 +24,7 @@ def login(email,password):
 	r = session.post(BASE, data=payload)
 	resp = json.loads(r.text)
 	try:
-		print resp["access_token"]
+		return resp["access_token"]
 	except:
 		#print resp
 		sid = resp["captcha_sid"]
