@@ -10,7 +10,7 @@ class Ui_Window(object):
         Window.resize(383, 213)
         self.verticalLayout = QtGui.QVBoxLayout(Window)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.horizontalLayout = QtGui.QHBoxLayout()
+        self.horizontalLayout = QtGui.QVBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.stickers_lw = QtGui.QListWidget(Window)
         self.stickers_lw.setObjectName("stickers_lw")
@@ -54,7 +54,13 @@ class MainWindow(QWidget, Ui_Window):
         print self.sticker
         ids = self.stickers[self.sticker]
         name = self.sticker
-        # ids = 
+        path = QFileDialog.getExistingDirectory(self, "Folder for saving stickers", "")
+        if path:
+            path = path + "\\" + name
+        else:
+            return 0
+        name = path
+        print path
         def download(ids, name):
             try:
                 os.mkdir(name)
@@ -74,7 +80,7 @@ class MainWindow(QWidget, Ui_Window):
         response = requests.get(url).json()
         for each in response["response"]["items"]:
             try:
-                print each["product"]["title"]
+                # print each["product"]["title"]
                 stickers.update({each["product"]["title"]: each["product"]["stickers"]["sticker_ids"]})
             except:
                 pass
