@@ -7,7 +7,7 @@ class Main(QWidget):
 		super(Main, self).__init__()
 		layout = QVBoxLayout(self)
 		self.setWindowTitle("Menu")
-		self.setFixedSize(200, 80)
+		self.setFixedSize(200, 100)
 		self.ACCESS_TOKEN = ACCESS_TOKEN
 
 		downoader_btn = QPushButton("Sticker Downloader")
@@ -16,6 +16,7 @@ class Main(QWidget):
 		downoader_btn.clicked.connect(self.downloader)
 		uploader_btn.clicked.connect(self.uploader)
 
+		layout.addWidget(QLabel("Created by Slavik Nychkalo"))
 		layout.addWidget(downoader_btn)
 		layout.addWidget(uploader_btn)
 
