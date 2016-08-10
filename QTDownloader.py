@@ -43,6 +43,7 @@ class MainWindow(QWidget, Ui_Window):
         # print text.text()
         self.sticker = text.text()
         print text.text()
+        self.download_btn.setText("Download")
         self.download_btn.setEnabled(1)
 
     def addItems(self, items):
@@ -59,6 +60,7 @@ class MainWindow(QWidget, Ui_Window):
             path = path + "\\" + name
         else:
             return 0
+    	self.download_btn.setText("Downloading...")
         name = path
         print path
         def download(ids, name):
@@ -71,7 +73,8 @@ class MainWindow(QWidget, Ui_Window):
                 url = "https://vk.com/images/stickers/%s/512.png"%stickerId
                 open(str(name)+"/"+str(stickerId)+".png", "wb").write(requests.get(url).content)
                 print url
-            print "Done!"
+            # print "Done!"
+            self.download_btn.setText("Done")
         threading.Thread(target=download, args=(ids, name)).start()
 
     def getStickers(self):
