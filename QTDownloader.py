@@ -70,8 +70,8 @@ class MainWindow(QWidget, Ui_Window):
                 pass
             print "Downloading...\n"
             for stickerId in ids:
-                url = "https://vk.com/images/stickers/%s/512.png"%stickerId
-                open(str(name)+"/"+str(stickerId)+".png", "wb").write(requests.get(url).content)
+                url = "https://vk.com/images/stickers/%s/512b.png"%stickerId
+                open(str(name)+"/"+str(stickerId)+"b.png", "wb").write(requests.get(url).content)
                 print url
             # print "Done!"
             self.download_btn.setText("Done")

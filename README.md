@@ -1,4 +1,4 @@
-# vk-graffiti
+# vk-graffiti new 
 Залив png картинки как граффити.
 
 Реализовано на **Python 2.7**.
