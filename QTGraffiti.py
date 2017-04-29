@@ -3,6 +3,7 @@
 from PySide.QtGui import *
 from PySide import QtCore
 import requests, json
+from pprint import pprint
 
 class Uploader(QWidget):
 	def __init__(self, ACCESS_TOKEN):
@@ -79,20 +80,25 @@ class Uploader(QWidget):
 	def docsSave(self):
 		url = "https://api.vk.com/method/docs.save"
 		data = {
-			"title": "graffiti.png",
+			"title": "graff1iti.png",
 			"lang": "ru",
 			"file": self.upload(),
 			"access_token": self.ACCESS_TOKEN,
 			"v": "5.54"
 		}
 		response = requests.post(url, data=data).json()["response"][0]
-		return "doc%s_%s"%(response["owner_id"], response["id"])
+		pprint(response)
+		# return "doc%s_%s"%(response["owner_id"], response["id"])
+		return (response["owner_id"], response["id"])
 
 	def graffitiSend(self):
-		doc = self.docsSave()
-		url = "https://api.vk.com/method/messages.send?user_id=%s&attachment=%s&access_token=%s&v=5.54"%(self.USER_ID, doc, self.ACCESS_TOKEN)
+		owner_id, doc_id = self.docsSave()
+		# url = "https://api.vk.com/method/messages.send?user_id=%s&attachment=%s&access_token=%s&v=5.54"%(self.USER_ID, doc, self.ACCESS_TOKEN)
+		print self.USER_ID
+		url = "https://api.vk.com/method/docs.add?owner_id=%s&doc_id=%s&access_token=%s&v=5.64"%(owner_id, doc_id, self.ACCESS_TOKEN)
 		response = requests.get(url).json()
 		# print response
+		pprint(response)
 		self.uploadStatus.setText("Done: " + str(response))
 		self.upload_btn.setText("Uploaded!")
 
