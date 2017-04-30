@@ -93,9 +93,9 @@ class Uploader(QWidget):
 
 	def graffitiSend(self):
 		owner_id, doc_id = self.docsSave()
-		# url = "https://api.vk.com/method/messages.send?user_id=%s&attachment=%s&access_token=%s&v=5.54"%(self.USER_ID, doc, self.ACCESS_TOKEN)
-		print self.USER_ID
-		url = "https://api.vk.com/method/docs.add?owner_id=%s&doc_id=%s&access_token=%s&v=5.64"%(owner_id, doc_id, self.ACCESS_TOKEN)
+		url = "https://api.vk.com/method/messages.send?user_id=%s&attachment=%s&access_token=%s&v=5.54"%(owner_id, "doc" + str(owner_id) + "_" + str(doc_id), self.ACCESS_TOKEN)
+		# print self.USER_ID
+		# url = "https://api.vk.com/method/docs.add?owner_id=%s&doc_id=%s&access_token=%s&v=5.64"%(owner_id, doc_id, self.ACCESS_TOKEN)
 		response = requests.get(url).json()
 		# print response
 		pprint(response)

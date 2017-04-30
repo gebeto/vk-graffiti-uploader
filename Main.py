@@ -1,5 +1,5 @@
 from PySide.QtGui import *
-import QTDownloader, QTLogin, QTGraffiti
+import QTDownloader, QTLogin, QTGraffiti, QTAudioDownloader
 import json, sys
 
 class Main(QWidget):
@@ -7,26 +7,21 @@ class Main(QWidget):
 		super(Main, self).__init__()
 		layout = QVBoxLayout(self)
 		self.setWindowTitle("Menu")
-		self.setFixedSize(200, 100)
+		self.setFixedSize(200, 120)
 		self.ACCESS_TOKEN = ACCESS_TOKEN
 
 		downoader_btn = QPushButton("Sticker Downloader")
 		uploader_btn = QPushButton("Graffiti Uploader")
+		audio_downloader_btn = QPushButton("Audio Downloader")
 
 		downoader_btn.clicked.connect(self.downloader)
 		uploader_btn.clicked.connect(self.uploader)
+		audio_downloader_btn.clicked.connect(self.audio_downloader)
 
 		layout.addWidget(QLabel("Created by Slavik Nychkalo"))
 		layout.addWidget(downoader_btn)
 		layout.addWidget(uploader_btn)
-
-		# try:
-		# 	data = json.load(open("VKdata.json","r"))
-		# 	self.ACCESS_TOKEN = data["access_token"]
-		# except:
-		# 	self.login()
-		# 	data = json.load(open("VKdata.json","r"))
-		# 	self.ACCESS_TOKEN = data["access_token"]
+		layout.addWidget(audio_downloader_btn)
 
 
 	def downloader(self):
@@ -35,6 +30,10 @@ class Main(QWidget):
 
 	def uploader(self):
 		self.down = QTGraffiti.Uploader(self.ACCESS_TOKEN)
+		self.down.show()
+
+	def audio_downloader(self):
+		self.down = QTAudioDownloader.Downloader(self.ACCESS_TOKEN)
 		self.down.show()
 
 	def login(self):
