@@ -61,7 +61,9 @@ class Login(QWidget):
 				'captcha_sid': self.captchaSid,
 				'captcha_key': str(self.captchaLine.text())
 			})
-		response = self.session.post(url, data=payload).json()
+		response = self.session.post(url, data=payload, headers={
+			"User-Agent": "com.vk.vkclient/48 (unknown, iOS 10.2, iPhone, Scale/2.000000)",
+		}).json()
 		try:
 			return response["access_token"]
 		except:
