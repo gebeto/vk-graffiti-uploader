@@ -7,8 +7,8 @@
  - pyinstaller --onefile --windowed Main.py
 
 ## Использованные сторонние модули:
- 1. **[PySide](http://docs.python-requests.org/en/master/)**
- 2. **[Requests](http://wiki.qt.io/PySide)**
+ 1. **[PySide](http://wiki.qt.io/PySide)**
+ 2. **[Requests](http://docs.python-requests.org/en/master/)**
 
 
 ## Я в соц сетях: 
