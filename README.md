@@ -1,9 +1,9 @@
-# vk-graffiti new 
-Залив png картинки как граффити.
+# vk-graffiti 2018 
+Залив png,gif,webp картинки как граффити.
 
 Реализовано на **Python 2.7**.
 
-## Собрано в .exe с помощю [PyInstaller](https://github.com/pyinstaller/pyinstaller)
+## Собирайте в .exe с помощю [PyInstaller](https://github.com/pyinstaller/pyinstaller)
  - pyinstaller --onefile --windowed Main.py
 
 ## Использованные сторонние модули:
