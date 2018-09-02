@@ -10,6 +10,7 @@ class Login(QWidget):
 		self.passwordLine = QLineEdit()
 		self.captchaImg = QLabel("")
 		self.captchaLine = QLineEdit()
+		self.f2aLine = QLineEdit()
 		self.loginButton = QPushButton("Login")
 
 		def btn():
@@ -24,14 +25,17 @@ class Login(QWidget):
 		self.Mlayout.addWidget(self.passwordLine)
 		self.Mlayout.addWidget(self.captchaImg)
 		self.Mlayout.addWidget(self.captchaLine)
+		self.Mlayout.addWidget(self.f2aLine)
 		self.Mlayout.addWidget(self.loginButton)
 
 		self.setFixedWidth(200)
 		self.captchaImg.setVisible(False)
 		self.captchaLine.setVisible(False)
+		self.f2aLine.setVisible(False)
 
 		self.session = requests.Session()
 		self.needCaptcha = False
+		self.need2fa = False
 		self.captchaSid = ""
 
 	def setCaptcha(self, url):
@@ -56,14 +60,18 @@ class Login(QWidget):
 			"client_secret": "VeWdmVclDCtn6ihuP1nt",
 			"client_id": "3140623"
 		}
+		
 		if self.needCaptcha:
 			payload.update({
 				'captcha_sid': self.captchaSid,
 				'captcha_key': str(self.captchaLine.text())
 			})
-		response = self.session.post(url, data=payload, headers={
-			"User-Agent": "com.vk.vkclient/48 (unknown, iOS 10.2, iPhone, Scale/2.000000)",
-		}).json()
+		elif self.need2fa:
+			payload.update({
+				'code': str(self.f2aLine.text())
+				})
+		response = self.session.post(url, data=payload).json()
+		print(response)
 		try:
 			return response["access_token"]
 		except:
@@ -73,6 +81,9 @@ class Login(QWidget):
 				self.captchaImg.setVisible(True)
 				self.needCaptcha = True
 				self.captchaSid = response["captcha_sid"]
+			elif response["validation_type"] == "2fa_app":
+				self.f2aLine.setVisible(True)
+				self.need2fa = True
 			else:
 				self.captchaImg.setText(response["error_description"])
 				self.captchaLine.setVisible(False)
