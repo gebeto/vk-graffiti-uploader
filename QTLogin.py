@@ -1,5 +1,10 @@
+# -*- coding: utf-8 -*-
+
 from PySide.QtGui import *
-import requests, sys, json
+import requests
+import json
+import sys
+
 
 class Login(QWidget):
 	def __init__(self):
@@ -97,3 +102,4 @@ def main():
 
 if __name__ == "__main__":
 	main()
+
