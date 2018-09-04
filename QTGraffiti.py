@@ -2,8 +2,9 @@
 
 from PySide.QtGui import *
 from PySide import QtCore
-from gif2png import gifToPng, webpToPng
-import requests, json
+from converter import converter
+import requests
+import json
 
 
 class Uploader(QWidget):
@@ -38,31 +39,23 @@ class Uploader(QWidget):
 		# OTHER
 		self.captcha_sid = ""
 		self.needCaptcha = False
-		self.FILE = None
 		self.ACCESS_TOKEN = ACCESS_TOKEN
 		print(requests.get("https://api.vk.com/method/users.get?name_case=nom&access_token=%s&v=5.53&lang=en"%self.ACCESS_TOKEN).json())
 		self.USER = requests.get("https://api.vk.com/method/users.get?name_case=nom&access_token=%s&v=5.53&lang=en"%self.ACCESS_TOKEN).json()["response"][0]
 		self.USER_ID = self.USER["id"]
 		user_lb.setText("%s %s, ID: %s\n"%(self.USER["first_name"], self.USER["last_name"], self.USER_ID))
+		self.FILE = None
 
 	def select_file(self):
 		self.uploadStatus.setText("")
-		self.filePath = QFileDialog.getOpenFileNames(self, "Select image for uploading", "", "*.png *.gif *.webp")
-		self.loadBar.setMaximum(len(self.filePath[0]))
+		self.file_path = QFileDialog.getOpenFileNames(self, "Select image for uploading", "", "*.png *.gif *.webp")
+		self.loadBar.setMaximum(len(self.file_path[0]))
 		self.loadBar.setVisible(True)
-		for file in self.filePath[0]:
+		for file in self.file_path[0]:
 			self.loadBar.setValue(self.loadBar.value()+1)
 			if file:
-				self.filePath = file
-				if file[-3:] == "gif":
-					gifToPng(file, file.split("\\")[-1][:-4])
-					self.filePath = file.split("\\")[-1][:-3]+"png"
-				elif file[-4:] == "webp":
-					webpToPng(file, file.split("\\")[-1][:-5])
-					self.filePath = file.split("\\")[-1][:-4]+"png"
-				self.FILE = open(self.filePath, "rb")
+				self.FILE = converter(file)
 				self.graffiti_send()
-				self.FILE.close()
 		self.loadBar.setValue(self.loadBar.value()+1)
 		self.uploadStatus.setText("Everything Uploaded")
 		
@@ -81,7 +74,7 @@ class Uploader(QWidget):
 
 	def upload(self, upload_type):
 		files = {
-			"file": self.FILE
+			"file": ("graffiti.png", self.FILE, "image/png", {"Expires": "0"})
 		}
 		url = self.get_upload_server({
 			"lang": "ru",
@@ -121,7 +114,6 @@ class Uploader(QWidget):
 
 	def graffiti_send(self):
 		doc = self.docs_save("graffiti")
-		self.FILE = open(self.filePath, "rb")
 		self.docs_save("0")
 		url = "https://api.vk.com/method/messages.send?user_id=%s&attachment=%s&access_token=%s&v=5.54"%(self.USER_ID, doc, self.ACCESS_TOKEN)
 		response = requests.get(url).json()

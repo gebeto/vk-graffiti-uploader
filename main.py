@@ -3,6 +3,7 @@
 from PySide.QtGui import *
 from QTGraffiti import Uploader
 import QTLogin
+import json
 
 
 def main(ACCESS_TOKEN):
@@ -12,7 +13,11 @@ def main(ACCESS_TOKEN):
 	app.exec_()
 
 try:
-	ACCESS_TOKEN = json.load(open("VKdata.json","r"))["access_token"]
+	file = open("VKdata.json","r")
+	file_data = json.load(file)
+	ACCESS_TOKEN = file_data.get("access_token")
+	print ACCESS_TOKEN
 	main(ACCESS_TOKEN)
 except:
 	QTLogin.main()
+
