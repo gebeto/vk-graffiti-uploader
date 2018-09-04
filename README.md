@@ -1,5 +1,5 @@
-# vk-graffiti 2018 
-Залив png, gif, webp картинки как граффити.
+# vk-graffiti-uploader
+Залив **png**, **gif**, **webp** картинки как граффити.
 
 Реализовано на **Python 2.7**.
 
