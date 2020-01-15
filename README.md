@@ -1,15 +1,19 @@
 # vk-graffiti-uploader
-Залив **png**, **gif**, **webp** картинки как граффити.
 
-Реализовано на **Python 3.8**.
+Upload **png**, **gif**, **webp** images as a graffiti.
 
-## Установить зависимости
+Implemented using **[Python 3.8](https://www.python.org/)**.
 
-`pip install -r requirements.txt`
+## Requirements installation
+```sh
+$ pip install -r requirements.txt
+```
 
-## Собирайте в .exe с помощю [PyInstaller](https://github.com/pyinstaller/pyinstaller)
- - pyinstaller --onefile --windowed main.py
+## Compile .exe using [PyInstaller](https://github.com/pyinstaller/pyinstaller)
+```sh
+$ pyinstaller --onefile --windowed main.py
+```
 
-## Использованные сторонние модули:
+## Used external libraries:
  1. **[PySide2](http://wiki.qt.io/PySide)**
  2. **[Requests](http://docs.python-requests.org/en/master/)**
