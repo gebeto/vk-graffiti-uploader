@@ -1,2 +1,4 @@
 *.pyc
 VKdata.json
+venv
+.idea
