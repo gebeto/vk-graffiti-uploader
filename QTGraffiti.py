@@ -1,4 +1,6 @@
 import requests
+import logging
+
 from PySide2.QtCore import Qt
 from PySide2.QtWidgets import (
     QProgressBar,
@@ -58,25 +60,30 @@ class Uploader(QWidget):
         self.user = response["response"][0]
         user_info_label.setText("%(first_name)s %(last_name)s, ID: %(id)s\n" % self.user)
         self.FILE = None
+        logging.info("STARTED UPLOADER")
 
     def select_file(self):
         self.uploadStatus.setText("")
-        self.file_path = QFileDialog.getOpenFileNames(self, "Select image for uploading", "", "*.png *.gif *.webp")
-        self.loadBar.setMaximum(len(self.file_path[0]))
+        self.file_path, masks = QFileDialog.getOpenFileNames(self, "Select image for uploading", "", "*.png *.gif *.webp")
+        logging.info(f"SELECTED {len(self.file_path)} IMAGES")
+        self.loadBar.setMaximum(len(self.file_path))
         self.loadBar.setVisible(True)
-        for file in self.file_path[0]:
-            self.loadBar.setValue(self.loadBar.value()+1)
+        for file in self.file_path:
+            self.loadBar.setValue(self.loadBar.value() + 1)
             if file:
                 self.FILE = converter(file)
+                logging.info(f"SENDING IMAGE {file}")
                 self.graffiti_send()
-        self.loadBar.setValue(self.loadBar.value()+1)
+                logging.info(f"SENDED IMAGE {file}")
+        self.loadBar.setValue(self.loadBar.value() + 1)
         self.uploadStatus.setText("Everything Uploaded")
+        logging.info(f"ALL IMAGES UPLOADED")
 
     def set_captcha(self, url):
         Image = requests.get(url).content
         pix = QPixmap()
         pix.loadFromData(Image)
-        pix = pix.scaled(180,180)
+        pix = pix.scaled(180, 180)
         self.img.setPixmap(pix)
         self.img.setVisible(True)
 
@@ -108,22 +115,23 @@ class Uploader(QWidget):
             "access_token": self.ACCESS_TOKEN,
             "v": "5.54"
         }
-        r = requests.post(url, data=data).json()
+        resp = requests.post(url, data=data).json()
         try:
-            response = r["response"][0]
+            response = resp["response"][0]
         except Exception:
-            self.captcha_sid = r['error']['captcha_sid']
-            captcha_img = r['error']['captcha_img']
+            logging.error("DOC SAVE ERROR: {response}")
+            self.captcha_sid = resp['error']['captcha_sid']
+            captcha_img = resp['error']['captcha_img']
             self.set_captcha(captcha_img)
             text, ok = QInputDialog.getText(self, 'Enter Captcha', 'Please enter captcha:')
             data.update({
                 'captcha_sid': self.captcha_sid,
                 'captcha_key': text
             })
-            r = requests.post(url, data=data).json()
-            response = r["response"][0]
+            resp = requests.post(url, data=data).json()
+            response = resp["response"][0]
         self.img.setVisible(False)
-        return "doc%s_%s"%(response["owner_id"], response["id"])
+        return "doc%(owner_id)s_%(id)s" % response
 
     def graffiti_send(self):
         doc = self.docs_save("graffiti")
@@ -134,16 +142,16 @@ class Uploader(QWidget):
             "doc": doc,
         }
         response = requests.get(url).json()
-        print("graffiti send response:", response)
+        logging.info(f"GRAFFITI SEND RESPONSE: {response}")
         self.img.setPixmap(None)
         self.img.setVisible(False)
 
 
 def main():
-    from PySide2.QtWidgets import QApplication
-    app = QApplication([])
     config = read_config()
     ACCESS_TOKEN = config.get("access_token")
+    from PySide2.QtWidgets import QApplication
+    app = QApplication([])
     w = Uploader(ACCESS_TOKEN)
     w.show()
     app.exec_()

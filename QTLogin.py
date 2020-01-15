@@ -1,6 +1,7 @@
 import sys
-
+import logging
 import requests
+
 from PySide2.QtWidgets import (
     QVBoxLayout,
     QPushButton,
@@ -11,6 +12,7 @@ from PySide2.QtWidgets import (
 from PySide2.QtGui import (
     QPixmap
 )
+
 
 from utils import save_config
 
@@ -46,6 +48,8 @@ class Login(QWidget):
         self.needCaptcha = False
         self.need2fa = False
         self.captchaSid = ""
+
+        logging.info("STARTED LOGIN")
 
     def handle_login_button_click(self):
         token = self.login()
@@ -86,10 +90,11 @@ class Login(QWidget):
                 'code': str(self.f2aLine.text())
                 })
         response = self.session.post(url, data=payload).json()
-        print("auth response:", response)
+        logging.info(f"AUTH RESPONSE: {response}")
         try:
             return response["access_token"]
         except:
+            logging.error(f"AUTH ERROR: {response}")
             if response["error"] == "need_captcha":
                 self.setCaptcha(response["captcha_img"])
                 self.captchaLine.setVisible(True)
@@ -107,7 +112,6 @@ class Login(QWidget):
 def main():
     from PySide2.QtWidgets import QApplication
     app = QApplication([])
-    print(dir(app))
     w = Login()
     w.show()
     app.exec_()
