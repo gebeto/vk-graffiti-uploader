@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from PySide.QtGui import *
-import requests
 import json
 import sys
+
+import requests
+from PySide2.QtWidgets import *
 
 
 class Login(QWidget):

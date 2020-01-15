@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from PySide.QtGui import *
-from PySide import QtCore
-from converter import converter
 import requests
-import json
+from PySide2 import QtCore
+from PySide2.QtGui import *
+from PySide2.QtWidgets import *
+
+from converter import converter
 
 
 class Uploader(QWidget):
@@ -35,15 +36,18 @@ class Uploader(QWidget):
 		layout.addWidget(self.img)
 		layout.addWidget(self.uploadStatus)
 		layout.addWidget(self.loadBar)
-		
+
 		# OTHER
 		self.captcha_sid = ""
 		self.needCaptcha = False
 		self.ACCESS_TOKEN = ACCESS_TOKEN
-		print(requests.get("https://api.vk.com/method/users.get?name_case=nom&access_token=%s&v=5.53&lang=en"%self.ACCESS_TOKEN).json())
-		self.USER = requests.get("https://api.vk.com/method/users.get?name_case=nom&access_token=%s&v=5.53&lang=en"%self.ACCESS_TOKEN).json()["response"][0]
+		print((requests.get(
+			"https://api.vk.com/method/users.get?name_case=nom&access_token=%s&v=5.53&lang=en" % self.ACCESS_TOKEN).json()))
+		self.USER = requests.get(
+			"https://api.vk.com/method/users.get?name_case=nom&access_token=%s&v=5.53&lang=en" % self.ACCESS_TOKEN).json()[
+			"response"][0]
 		self.USER_ID = self.USER["id"]
-		user_lb.setText("%s %s, ID: %s\n"%(self.USER["first_name"], self.USER["last_name"], self.USER_ID))
+		user_lb.setText("%s %s, ID: %s\n" % (self.USER["first_name"], self.USER["last_name"], self.USER_ID))
 		self.FILE = None
 
 	def select_file(self):
