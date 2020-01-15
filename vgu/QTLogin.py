@@ -16,6 +16,8 @@ from PySide2.QtGui import (
 
 from .utils import save_config
 
+logger = logging.getLogger(__name__)
+
 
 class Login(QWidget):
     def __init__(self):
@@ -49,7 +51,7 @@ class Login(QWidget):
         self.need2fa = False
         self.captchaSid = ""
 
-        logging.info("STARTED LOGIN")
+        logger.info("STARTED LOGIN")
 
     def handle_login_button_click(self):
         token = self.login()
@@ -90,11 +92,11 @@ class Login(QWidget):
                 'code': str(self.f2aLine.text())
                 })
         response = self.session.post(url, data=payload).json()
-        logging.info(f"AUTH RESPONSE: {response}")
+        logger.info(f"AUTH RESPONSE: {response}")
         try:
             return response["access_token"]
         except:
-            logging.error(f"AUTH ERROR: {response}")
+            logger.error(f"AUTH ERROR: {response}")
             if response["error"] == "need_captcha":
                 self.setCaptcha(response["captcha_img"])
                 self.captchaLine.setVisible(True)
