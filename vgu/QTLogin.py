@@ -14,7 +14,7 @@ from PySide2.QtGui import (
 )
 
 
-from utils import save_config
+from .utils import save_config
 
 
 class Login(QWidget):

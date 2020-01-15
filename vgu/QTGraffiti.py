@@ -15,8 +15,8 @@ from PySide2.QtGui import (
     QPixmap
 )
 
-from converter import converter
-from utils import read_config
+from .converter import converter
+from .utils import read_config
 
 
 class Uploader(QWidget):

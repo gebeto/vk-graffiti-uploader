@@ -1,7 +1,6 @@
-import QTLogin
-import QTGraffiti
-
-from exceptions import NoConfigError
+from vgu import QTLogin
+from vgu import QTGraffiti
+from vgu.exceptions import NoConfigError
 
 import logging
 import logging.config

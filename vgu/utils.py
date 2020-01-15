@@ -1,5 +1,5 @@
 import json
-from exceptions import NoConfigError
+from .exceptions import NoConfigError
 
 
 CONFIG_FILE_NAME = "VKdata.json"
