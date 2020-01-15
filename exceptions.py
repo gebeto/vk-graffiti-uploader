@@ -1,0 +1,3 @@
+
+class NoConfigError(FileNotFoundError):
+	pass
