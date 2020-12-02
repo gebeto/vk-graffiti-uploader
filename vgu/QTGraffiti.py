@@ -21,6 +21,10 @@ from .utils import read_config
 logger = logging.getLogger(__name__)
 
 
+API_VERSION = "5.54"
+DOCS_API_VERSION = "5.84"
+
+
 class Uploader(QWidget):
     def __init__(self, ACCESS_TOKEN):
         super(Uploader, self).__init__()
@@ -55,8 +59,9 @@ class Uploader(QWidget):
         self.needCaptcha = False
         self.ACCESS_TOKEN = ACCESS_TOKEN
         response = requests.get(
-            "https://api.vk.com/method/users.get?name_case=nom&access_token={access_token}&v=5.53&lang=en".format(
-                access_token=self.ACCESS_TOKEN
+            "https://api.vk.com/method/users.get?name_case=nom&access_token={access_token}&v={version}&lang=en".format(
+                access_token=self.ACCESS_TOKEN,
+                version=API_VERSION,
             )
         ).json()
         self.user = response["response"][0]
@@ -102,7 +107,7 @@ class Uploader(QWidget):
             "lang": "ru",
             "type": upload_type,
             "access_token": self.ACCESS_TOKEN,
-            "v": "5.84"
+            "v": DOCS_API_VERSION
         })
         response = requests.post(url, files=files).json()
         return response["file"]
@@ -115,7 +120,7 @@ class Uploader(QWidget):
             "lang": "ru",
             "file": self.upload(upload_type),
             "access_token": self.ACCESS_TOKEN,
-            "v": "5.54"
+            "v": API_VERSION
         }
         resp = requests.post(url, data=data).json()
         try:
@@ -138,9 +143,10 @@ class Uploader(QWidget):
     def graffiti_send(self):
         doc = self.docs_save("graffiti")
         self.docs_save("0")
-        url = "https://api.vk.com/method/messages.send?user_id=%(user_id)s&attachment=%(doc)s&access_token=%(access_token)s&v=5.54" % {
+        url = "https://api.vk.com/method/messages.send?user_id=%(user_id)s&attachment=%(doc)s&access_token=%(access_token)s&v=%(version)s" % {
             "access_token": self.ACCESS_TOKEN,
             "user_id": self.user["id"],
+            "version": API_VERSION,
             "doc": doc,
         }
         response = requests.get(url).json()
