@@ -1,5 +1,6 @@
 import requests
 import logging
+import time
 
 from PySide2.QtCore import Qt
 from PySide2.QtWidgets import (
@@ -21,7 +22,8 @@ from .utils import read_config
 logger = logging.getLogger(__name__)
 
 
-API_VERSION = "5.54"
+NEWEST_API_VERSION = "5.126"
+API_VERSION = "5.84"
 DOCS_API_VERSION = "5.84"
 
 
@@ -120,13 +122,17 @@ class Uploader(QWidget):
             "lang": "ru",
             "file": self.upload(upload_type),
             "access_token": self.ACCESS_TOKEN,
-            "v": API_VERSION
+            "v": DOCS_API_VERSION
         }
         resp = requests.post(url, data=data).json()
+        # print(" >>> docs.save RES ", resp)
+        # print("\n\n\n")
+        # print(resp["response"])
+        # print("\n\n\n")
         try:
-            response = resp["response"][0]
+            response = resp["response"]["graffiti"]
         except Exception:
-            logger.error("DOC SAVE ERROR: {response}")
+            logger.error("DOC SAVE ERROR: {resp}")
             self.captcha_sid = resp['error']['captcha_sid']
             captcha_img = resp['error']['captcha_img']
             self.set_captcha(captcha_img)
@@ -138,18 +144,23 @@ class Uploader(QWidget):
             resp = requests.post(url, data=data).json()
             response = resp["response"][0]
         self.img.setVisible(False)
-        return "doc%(owner_id)s_%(id)s" % response
+        # return "doc%(owner_id)s_%(id)s" % response
+        return "graffiti%(owner_id)s_%(id)s" % response
 
     def graffiti_send(self):
         doc = self.docs_save("graffiti")
-        self.docs_save("0")
-        url = "https://api.vk.com/method/messages.send?user_id=%(user_id)s&attachment=%(doc)s&access_token=%(access_token)s&v=%(version)s" % {
+        # print(" >>> SES", doc)
+        # self.docs_save("0")
+        url = "https://api.vk.com/method/messages.send?user_id=%(user_id)s&random_id=%(random_id)s&attachment=%(attachment)s&access_token=%(access_token)s&v=%(version)s" % {
             "access_token": self.ACCESS_TOKEN,
             "user_id": self.user["id"],
-            "version": API_VERSION,
-            "doc": doc,
+            "random_id": int(time.time() * 10000),
+            "version": NEWEST_API_VERSION,
+            # "doc": doc,
+            "attachment": doc,
         }
         response = requests.get(url).json()
+        print(" RES", response)
         logger.info(f"GRAFFITI SEND RESPONSE: {response}")
         self.img.setPixmap(None)
         self.img.setVisible(False)

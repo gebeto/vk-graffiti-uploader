@@ -4,7 +4,7 @@ from vgu.exceptions import NoConfigError
 
 import logging
 import logging.config
-logging.config.fileConfig("logging.ini")
+# logging.config.fileConfig("logging.ini")
 
 
 try:
